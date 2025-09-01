@@ -30,17 +30,21 @@ int main()
 		}
 		window.clear(Color::White);
 		//window.draw(figure, 4, PrimitiveType::Triangles);
-		if (Circle.getPosition().x <= 100 && Circle.getPosition().y == 0)
+		if (Circle.getPosition().x <= 100 && Circle.getPosition().y < 1)
 		{
 			Circle.setPosition(Circle.getPosition() + Vector2f(speed, 0));
-			/*if (Circle.getPosition().x == 100)
+			if (Circle.getPosition().x >= 99)
 			{
-				Circle.setPosition(Circle.getPosition().x, Circle.getPosition().y + 1)
-			}*/
+				Circle.setPosition(Circle.getPosition() + Vector2f(0, 10));
+			}
 		}
-		else if (Circle.getPosition().x >= 100)
+		else if (Circle.getPosition().x >= 100 && Circle.getPosition().y >= 1)
 		{
 			Circle.setPosition(Circle.getPosition() - Vector2f(0, speed));
+			if (Circle.getPosition().x <= 0)
+			{
+				Circle.setPosition(Circle.getPosition() + Vector2f(0, -10));
+			}
 		}
 		
 		window.draw(Circle);
