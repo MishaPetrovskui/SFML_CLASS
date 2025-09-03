@@ -72,7 +72,7 @@ int main()
 			if (event->is<Event::Closed>())
 				window.close();
 		}
-		window.clear(MAIN_COLOR);
+		window.clear(Color::White);
 		window.draw(figure, 24, PrimitiveType::Triangles);
 		window.display();
 	}
