@@ -4,9 +4,10 @@ using namespace sf;
 using namespace std;
 
 Color MAIN_COLOR(57, 62, 173, 0);
-float speed = 0.1f;
+float speed = 4.f;
 int main()
 {
+	bool isright = true;
 	RenderWindow window(VideoMode({200,200}), "SFML");
 
 	Vertex figure[] =
@@ -28,22 +29,22 @@ int main()
 			if (event->is<Event::Closed>())
 				window.close();
 		}
-		window.clear(Color::White);
+		window.clear(MAIN_COLOR);
 		//window.draw(figure, 4, PrimitiveType::Triangles);
-		if (Circle.getPosition().x <= 100 && Circle.getPosition().y < 1)
+		if (isright)
 		{
 			Circle.setPosition(Circle.getPosition() + Vector2f(speed, 0));
-			if (Circle.getPosition().x >= 99)
+			if (Circle.getPosition().x >= 100)
 			{
-				Circle.setPosition(Circle.getPosition() + Vector2f(0, 10));
+				isright = false;
 			}
 		}
-		else if (Circle.getPosition().x >= 100 && Circle.getPosition().y >= 1)
+		else
 		{
-			Circle.setPosition(Circle.getPosition() - Vector2f(0, speed));
-			if (Circle.getPosition().x <= 0)
+			Circle.setPosition(Circle.getPosition() - Vector2f(speed, 0));
+			if (Circle.getPosition().x <= 1)
 			{
-				Circle.setPosition(Circle.getPosition() + Vector2f(0, -10));
+				isright = true;
 			}
 		}
 		
