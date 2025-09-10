@@ -21,8 +21,18 @@ const char Map[Map_Height][Map_Width+1] =
 const float TILE_SIZE = 100.f;
 
 Color MAIN_COLOR(57, 62, 173, 0);
-
-//bool IsCanMove()
+/*
+bool IsCanMove(CircleShape shape, Vector2f tile)
+{
+	if (shape.getPosition().x <= tile.x + shape.getRadius() || shape.getPosition().x >= tile.x - shape.getRadius())
+		return false;
+	else if (shape.getPosition().y <= tile.y + shape.getRadius() || shape.getPosition().y >= tile.y - shape.getRadius())
+		return false;
+	else
+		return true;
+}
+*/
+//bool IsCanMove(CircleShape shape, Vector2f tile)
 //{
 //
 //}
@@ -31,10 +41,15 @@ int main()
 {
 	RenderWindow window(VideoMode({ 1000,700 }), "SFML");
 
-	CircleShape shape(50.f);
+	CircleShape shape(40.f);
 	shape.setFillColor(Color::Green);
 	shape.setOrigin({ shape.getRadius(), shape.getRadius() });
 	shape.setPosition({ 150.f,150.f });
+
+	CircleShape shape1(40.f);
+	shape1.setFillColor(Color::Green);
+	shape1.setOrigin({ shape.getRadius(), shape.getRadius() });
+	shape1.setPosition({ 150.f,150.f });
 	float shape_speed = 0.5f;
 	Vector2f pos_of_mouse;
 	Vector2f pos_of_mouse1;
@@ -88,24 +103,21 @@ int main()
 			shape.move({ -0.5, 0 });
 		if (Keyboard::isKeyPressed(Keyboard::Key::D))
 			shape.move({ 0.5, 0 });*/
-
+		RectangleShape tile({ TILE_SIZE, TILE_SIZE });
 		for (int y = 0; y < Map_Height; y++)
 			for (int x = 0; x < Map_Width; x++)
 			{
-				if (Map[y][x] == ' ') continue;
-				else if (Map[y][x] == 'X')
+				if (Map[y][x] == 'X')
 				{
-					RectangleShape tile({ TILE_SIZE, TILE_SIZE });
+					//RectangleShape tile({ TILE_SIZE, TILE_SIZE });
 					tile.setFillColor(Color::Magenta);
 					tile.setPosition({ x * TILE_SIZE, y * TILE_SIZE });
 					window.draw(tile);
-					if (shape.getPosition()/* * (shape.getRadius() * 2)*/ == tile.getPosition())
-					{
-						
-						shape.setPosition({ 150.f,150.f });
-						
-					}
-					else
+					shape1.setPosition({ tile.getPosition().x + shape.getRadius(), tile.getPosition().y + shape.getRadius() });
+				}
+				else if (Map[y][x] == ' ')
+				{
+					if (IsCanMove(shape, tile.getPosition()))
 					{
 						if (Keyboard::isKeyPressed(Keyboard::Key::W))
 							shape.move({ 0, -0.01 });
@@ -116,6 +128,8 @@ int main()
 						if (Keyboard::isKeyPressed(Keyboard::Key::D))
 							shape.move({ 0.01, 0 });
 					}
+					else
+						cout << "not" << endl;
 				}
 			}
 
@@ -135,6 +149,7 @@ int main()
 
 		
 		window.draw(shape);
+		window.draw(shape1);
 		window.display();
 	}
 
