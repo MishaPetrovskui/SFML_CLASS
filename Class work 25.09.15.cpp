@@ -30,11 +30,11 @@ int main()
 	int activequestion = 0;
 	Text test[5]
 	{
-		Text(font, "A", 50),
-		Text(font, "B", 50),
-		Text(font, "C", 50),
-		Text(font, "D", 50),
-		Text(font, "E", 50)
+		Text(font, "Question 1: How many legs does a cat have?", 50),
+		Text(font, "Question 2: What is the capital of England?", 50),
+		Text(font, "Question 3 What is the capital of Australia?:", 50),
+		Text(font, "Question 4: Choose the correct form of the verb: \"She ___ to the store yesterday.\"", 50),
+		Text(font, "Question 5: Which word is a synonym of \"happy\"?", 50)
 	};
 
 	for (int i = 0; i < 4; i++)
@@ -43,6 +43,8 @@ int main()
 			answers[i].setFillColor(Color::Red);
 		answers[i].setPosition({ 50.f, 400.f + (float)(answers[i].getCharacterSize() * i) });
 	}
+
+	test->setFillColor(Color::Black);
 	int correct = 0;
 
 	/*int index = randint(0, 26);
@@ -50,7 +52,7 @@ int main()
 	Text text1(font, "Click for " + Knopka[index], 50);
 	text1.setString("Clicked: " + to_string(clickCount++) + "times" + "Button: " + Knopka[index]);
 	text1.setFillColor(Color::Black);*/
-	
+
 	while (window.isOpen())
 	{
 		while (const optional event = window.pollEvent())
@@ -74,7 +76,7 @@ int main()
 			}
 			if (event->is<Event::KeyPressed>())
 				if (event->getIf<Event::KeyPressed>()->code == (Keyboard::Key)index)
-				{					
+				{
 					index = randint(0, 26);
 					text1.setString("Clicked: " + to_string(clickCount++) + "times" + "Button: " + Knopka[index]);
 				}*/
@@ -82,7 +84,7 @@ int main()
 			{
 				auto keyEvent = event->getIf<Event::KeyPressed>()->code;
 				if (keyEvent == Keyboard::Key::Up)
-					activeButton = max(0, activeButton-1);
+					activeButton = max(0, activeButton - 1);
 				if (keyEvent == Keyboard::Key::Down)
 					activeButton = min(3, activeButton + 1);
 			}
@@ -99,15 +101,13 @@ int main()
 		text1.setOrigin({ text1.getLocalBounds().size.x / 2.f, text1.getLocalBounds().size.y / 2.f });
 		text1.setPosition({(window.getSize().x / 2.f), (window.getSize().y / 2.f) });*/
 		window.clear(Color::White);
-
+		window.draw(test[activequestion]);
 		if (activequestion == 0)
 		{
-			test[activequestion].setString("Question 1: How many legs does a cat have?");
 			answers[0].setString("A. 2");
 			answers[1].setString("B. 3");
 			answers[2].setString("C. 4");
 			answers[3].setString("D. 5");
-			window.draw(test[activequestion]);
 			for (int i = 0; i < 4; i++)
 			{
 				if (i == activeButton)
@@ -131,6 +131,10 @@ int main()
 		}
 		else if (activequestion == 1)
 		{
+			answers[0].setString("A. Paris");
+			answers[1].setString("B. London");
+			answers[2].setString("C. Berlin");
+			answers[3].setString("D. Madrid");
 			for (int i = 0; i < 5; i++)
 			{
 				if (i == activeButton)
@@ -139,6 +143,19 @@ int main()
 					test[i].setFillColor(Color::Black);
 				window.draw(test[i]);
 			}
+			Thread()
+			if (Keyboard::isKeyPressed(Keyboard::Key::Enter))
+			{
+				if (activeButton == 1)
+				{
+					correct++;
+					cout << "Correct!" << endl;
+				}
+				else
+					cout << "Wrong!" << endl;
+				activequestion++;
+				activeButton = 0;
+			}
 		}
 
 		window.display();
@@ -146,4 +163,4 @@ int main()
 
 
 	return 0;
-}           
+}
