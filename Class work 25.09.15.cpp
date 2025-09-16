@@ -28,6 +28,7 @@ int main()
 		Text(font, "D", 50)
 	};
 	int activequestion = 0;
+	int correctAnswers[5] = { 2, 1, 3, 0, 2 };
 	Text test[5]
 	{
 		Text(font, "Question 1: How many legs does a cat have?", 50),
@@ -44,9 +45,10 @@ int main()
 		answers[i].setPosition({ 50.f, 400.f + (float)(answers[i].getCharacterSize() * i) });
 	}
 
-	test->setFillColor(Color::Black);
+	for (int i = 0; i < 5; i++)
+		test[i].setFillColor(Color::Black);
 	int correct = 0;
-
+	bool finished = false;
 	/*int index = randint(0, 26);
 	int clickCount = 0;
 	Text text1(font, "Click for " + Knopka[index], 50);
@@ -80,13 +82,32 @@ int main()
 					index = randint(0, 26);
 					text1.setString("Clicked: " + to_string(clickCount++) + "times" + "Button: " + Knopka[index]);
 				}*/
-			if (event->is<Event::KeyPressed>())
+			if (!finished)
 			{
-				auto keyEvent = event->getIf<Event::KeyPressed>()->code;
-				if (keyEvent == Keyboard::Key::Up)
-					activeButton = max(0, activeButton - 1);
-				if (keyEvent == Keyboard::Key::Down)
-					activeButton = min(3, activeButton + 1);
+				if (event->is<Event::KeyPressed>())
+				{
+					auto keyEvent = event->getIf<Event::KeyPressed>()->code;
+					if (keyEvent == Keyboard::Key::Up)
+						activeButton = max(0, activeButton - 1);
+					if (keyEvent == Keyboard::Key::Down)
+						activeButton = min(3, activeButton + 1);
+					if (keyEvent == Keyboard::Key::Enter)
+					{
+						if (activeButton == correctAnswers[activequestion])
+						{
+							correct++;
+							cout << "Correct!" << endl;
+						}
+						else
+							cout << "Wrong!" << endl;
+
+						activequestion++;
+						activeButton = 0;
+						if (activequestion >= 5)
+							finished = true;
+						sf::sleep(sf::milliseconds(200));
+					}
+				}
 			}
 		}
 		/*cout << Knopka[index] << endl;
@@ -101,13 +122,46 @@ int main()
 		text1.setOrigin({ text1.getLocalBounds().size.x / 2.f, text1.getLocalBounds().size.y / 2.f });
 		text1.setPosition({(window.getSize().x / 2.f), (window.getSize().y / 2.f) });*/
 		window.clear(Color::White);
-		window.draw(test[activequestion]);
-		if (activequestion == 0)
+		if (!finished)
 		{
-			answers[0].setString("A. 2");
-			answers[1].setString("B. 3");
-			answers[2].setString("C. 4");
-			answers[3].setString("D. 5");
+			window.draw(test[activequestion]);
+
+			if (activequestion == 0)
+			{
+				answers[0].setString("A. 2");
+				answers[1].setString("B. 3");
+				answers[2].setString("C. 4");
+				answers[3].setString("D. 5");
+			}
+			else if (activequestion == 1)
+			{
+				answers[0].setString("A. Paris");
+				answers[1].setString("B. London");
+				answers[2].setString("C. Berlin");
+				answers[3].setString("D. Madrid");
+			}
+			else if (activequestion == 2)
+			{
+				answers[0].setString("A. Sydney");
+				answers[1].setString("B. Melbourne");
+				answers[2].setString("C. Canberra");
+				answers[3].setString("D. Brisbane");
+			}
+			else if (activequestion == 3)
+			{
+				answers[0].setString("A. went");
+				answers[1].setString("B. go");
+				answers[2].setString("C. goes");
+				answers[3].setString("D. going");
+			}
+			else if (activequestion == 4)
+			{
+				answers[0].setString("A. sad");
+				answers[1].setString("B. angry");
+				answers[2].setString("C. joyful");
+				answers[3].setString("D. tired");
+			}
+
 			for (int i = 0; i < 4; i++)
 			{
 				if (i == activeButton)
@@ -116,49 +170,17 @@ int main()
 					answers[i].setFillColor(Color::Black);
 				window.draw(answers[i]);
 			}
-			if (Keyboard::isKeyPressed(Keyboard::Key::Enter))
-			{
-				if (activeButton == 2)
-				{
-					correct++;
-					cout << "Correct!" << endl;
-				}
-				else
-					cout << "Wrong!" << endl;
-				activequestion++;
-				activeButton = 0;
-			}
 		}
-		else if (activequestion == 1)
+		else
 		{
-			answers[0].setString("A. Paris");
-			answers[1].setString("B. London");
-			answers[2].setString("C. Berlin");
-			answers[3].setString("D. Madrid");
-			for (int i = 0; i < 5; i++)
-			{
-				if (i == activeButton)
-					test[i].setFillColor(Color::Red);
-				else
-					test[i].setFillColor(Color::Black);
-				window.draw(test[i]);
-			}
-			Thread()
-			if (Keyboard::isKeyPressed(Keyboard::Key::Enter))
-			{
-				if (activeButton == 1)
-				{
-					correct++;
-					cout << "Correct!" << endl;
-				}
-				else
-					cout << "Wrong!" << endl;
-				activequestion++;
-				activeButton = 0;
-			}
+			Text result(font, "Your score: " + to_string(correct) + " / 5", 50);
+			result.setFillColor(Color::Black);
+			result.setPosition({ 200.f, 300.f });
+			window.draw(result);
 		}
 
 		window.display();
+
 	}
 
 
