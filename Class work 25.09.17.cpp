@@ -30,6 +30,11 @@ bool isCollide(CircleShape circle, RectangleShape rectangle)
 	return isCollide(circle, nearestPoint(circle.getPosition(), rectangle));
 }
 
+bool isCollide(CircleShape circle, RectangleShape rectangle, Vector2f direction)
+{
+	return ((circle.getPosition() + direction) - nearestPoint(circle.getPosition(), rectangle)).length() - circle.getRadius() <= 0;
+}
+
 int main()
 {
 	srand(time(0));
@@ -63,7 +68,7 @@ int main()
 				//direction = ((Vector2f)mousePosition - circle.getPosition()) / 100.f;
 			}
 		}
-		
+
 		window.clear(Color::Black);
 
 		window.draw(rectangle);
@@ -71,16 +76,16 @@ int main()
 		indicator.setPosition(nearestPoint(circle.getPosition(), rectangle));
 		circle.move(direction);
 		if (isCollide(circle, rectangle))
+		{
 			circle.move(-direction);
-
-		window.draw(rectangle);
-
-		indicator.setPosition(
-			nearestPoint(circle.getPosition(), rectangle)
-		);
+			if (!isCollide(circle, rectangle, { direction.x,0.f }))
+				circle.move({ direction.x,0.f });
+			if (!isCollide(circle, rectangle, { 0.f,direction.y }))
+				circle.move({ 0.f,direction.y });
+		}
 		window.draw(indicator);
 		window.draw(circle);
-		
+
 		window.display();
 
 	}
